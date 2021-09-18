@@ -12,6 +12,10 @@ class StoreAPI(generics.ListAPIView):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
 
+class ProductAPI(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
 class StoreDetailAPI(generics.ListAPIView):
     serializer_class = StoreDetailSerializer
     
@@ -23,8 +27,8 @@ class StoreDetailAPI(generics.ListAPIView):
 @csrf_exempt
 @api_view(['GET','POST'])
 def StoreAddAPI(request,pk):
-    if request.method == 'POST':
-        data = request.data
+    data = request.data
+    if request.method == 'POST':  
         data['Store'] = pk 
         store = Store.objects.get(id = data['Store'])
         product = Product.objects.get(id = data['Product']) 
@@ -48,17 +52,15 @@ def StoreAddAPI(request,pk):
                 return Response(serializer.data, status=201)
             return Response(serializer.errors, status=400)
     else :
-        queryset = StoreContent.objects.filter(Store = pk)
-        serializer = StoreDetailSerializer(queryset, many=True)
-        data = request.data
+        example = {"example of request":"{'Product:4','Count: 100'}"}
         print('This is request.data '+ str(data))
-        return Response(serializer.data)
+        return Response(example)
 
 @csrf_exempt
 @api_view(['GET','POST'])
 def StoreBuyAPI(request,pk):
+    data = request.data
     if request.method == 'POST':
-        data = request.data
         data['Store'] = pk 
         store = Store.objects.get(id = data['Store'])
         product = Product.objects.get(id = data['Product']) 
@@ -84,8 +86,18 @@ def StoreBuyAPI(request,pk):
             else:
                 return Response(status=400)
     else :
-        queryset = StoreContent.objects.filter(Store = pk)
-        serializer = StoreDetailSerializer(queryset, many=True)
-        data = request.data
+        example = {"example of request":"{'Product:4','Count: 100'}"}
         print('This is request.data '+ str(data))
-        return Response(serializer.data)
+        return Response(example)
+
+
+@api_view(['GET'])
+def APIOverview(request):
+    APIList = {
+    'List of Stores':'api/',
+    'List of registered Products':'api/product',
+    'Store Product List':'api/<int:pk>/', 
+    'Add product to Store':'api/<int:pk>/add/  example of request: [{"Product": 4,"Count": 100}]' ,
+    'Buy product from Store':'api/<int:pk>/buy/ example of request: [{"Product": 4,"Count": 21}]',
+    }
+    return Response(APIList)

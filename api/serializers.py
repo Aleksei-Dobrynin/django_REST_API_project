@@ -8,6 +8,12 @@ class StoreSerializer(serializers.ModelSerializer):
         model = Store
         fields = ('id','Name')
 
+class ProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = ('id','Name','Description')
+
 
 class StoreDetailSerializer(serializers.ModelSerializer):
 
@@ -26,3 +32,4 @@ class StoreDetailBuySerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreBuyProduct
         fields = ('Store','Product','Count')
+

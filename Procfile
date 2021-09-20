@@ -1,0 +1,1 @@
+web: gunicorn retech_test.wsgi --log-file -
